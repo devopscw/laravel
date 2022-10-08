@@ -14,7 +14,7 @@ services:
 
   db:
     image: mysql:5.7.33
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -24,14 +24,18 @@ services:
       - app-network
     volumes:
       - dbdata:/var/lib/mysql
+    ports:
+      - ${DB_PORT}:${DB_PORT}
 
   app:
     build: .
-    restart: always
+    restart: unless-stopped
     networks:
       - app-network
     volumes:
       - ./:/var/www
+    # ports:
+    #   - 9000:9000
 
   # node:
   #   image: node:15-alpine
